@@ -27,6 +27,7 @@ PubSubClient client(espClient);
 
 static bool autoMode = true;
 static bool isFirst = true;
+static bool isFirstDHT = true;
 
 void setup_wifi() {
   delay(10);
@@ -118,6 +119,28 @@ void repeatMe() {
       Serial.print("Humidity:");
       Serial.println(String(h).c_str());
       client.publish(Garden_Humidity, String(h).c_str(), true);
+
+       if((t >= 27)||(h <=70))
+       {
+         Serial.println("Bom nuoc");
+         if(isFirstDHT == true)
+         {
+          client.publish(Garden_Motor,"1",{retain: 2});
+          client.publish(Garden_Copony,"3",{retain: 2});
+          isFirstDHT = false;
+          }
+        } 
+  else if ((t<27)||(h>70))
+    {
+        Serial.println("Tat motor");
+        if(isFirstDHT == false)
+         {
+          client.publish(Garden_Motor,"2",{retain: 2});
+          client.publish(Garden_Copony,"4",{retain: 2});
+          isFirstDHT = true;
+          }
+        }
+       
 }
 void readAnhSang()
 {
@@ -139,10 +162,9 @@ void readAnhSang()
           client.publish(Garden_Light,"5",{retain: 2});//de bat
           isFirst = true;
           }
-        } 
-  
-        
+        }       
 }
+ 
  void readBtn()
  {
     if(digitalRead(13) == LOW)
