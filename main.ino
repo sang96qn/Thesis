@@ -142,8 +142,8 @@ void docNhietDo() {
 }
 void docQuangTro()
 {
-  int x = digitalRead(QUANGTRO);
-  if(x == 0)
+  int statusQuangTro = digitalRead(QUANGTRO);
+  if(statusQuangTro == 0)
        {
          Serial.println("Troi Sang");
          if(isFirst == true)
